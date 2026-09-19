@@ -66,6 +66,8 @@ module "autoscaling" {
 
   target_group_arn = module.alb.target_group_arn
 
+  instance_profile_name = module.iam.ec2_instance_profile_name
+
   instance_type = "t3.micro"
 
   min_size         = 2
