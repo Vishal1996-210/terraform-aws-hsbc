@@ -89,3 +89,25 @@ resource "aws_vpc_security_group_egress_rule" "rds_all_outbound" {
 
   description = "Allow outbound traffic from RDS"
 }
+
+resource "aws_security_group" "eks_cluster" {
+  name        = "${var.project_name}-${var.environment}-eks-cluster-sg"
+  description = "Security group for EKS control plane"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-eks-cluster-sg"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "eks_cluster_from_nodes" {
+  security_group_id = aws_security_group.eks_cluster.id
+
+  referenced_security_group_id = aws_security_group.eks_application.id
+
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+
+  description = "Allow EKS nodes to communicate with the Kubernetes API"
+}
