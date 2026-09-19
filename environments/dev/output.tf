@@ -107,3 +107,18 @@ output "rds_secret_reader_role_arn" {
   description = "IAM role ARN for EKS workloads to read RDS credentials"
   value       = module.secrets_manager.rds_secret_reader_role_arn
 }
+
+output "route53_hosted_zone_id" {
+  description = "Production Route 53 hosted zone ID"
+  value       = module.route53.hosted_zone_id
+}
+
+output "route53_name_servers" {
+  description = "Production Route 53 name servers"
+  value       = module.route53.name_servers
+}
+
+output "route53_domain_name" {
+  description = "Production Route 53 domain name"
+  value       = module.route53.domain_name
+}
