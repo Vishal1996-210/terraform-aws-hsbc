@@ -43,3 +43,21 @@ module "ecr" {
     "hsbc-prod-card-service"
   ]
 }
+
+module "eks" {
+  source = "../../modules/eks"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  cluster_version = var.eks_cluster_version
+
+  vpc_id = module.vpc.vpc_id
+
+  private_eks_subnet_ids = module.vpc.private_eks_subnet_ids
+
+  eks_cluster_role_arn = module.iam.eks_cluster_role_arn
+  eks_node_role_arn    = module.iam.eks_node_role_arn
+
+  cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
+}
