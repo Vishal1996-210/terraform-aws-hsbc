@@ -40,7 +40,7 @@ rds_allocated_storage = 100
 
 rds_max_allocated_storage = 500
 
-mysql_engine_version = "8.0"
+mysql_engine_version = "8.4"
 
 rds_backup_retention_period = 7
 
