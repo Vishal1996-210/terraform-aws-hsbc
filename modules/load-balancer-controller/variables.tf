@@ -22,8 +22,3 @@ variable "vpc_id" {
   description = "VPC ID"
   type        = string
 }
-
-variable "iam_role_arn" {
-  description = "IAM role ARN used by AWS Load Balancer Controller"
-  type        = string
-}
