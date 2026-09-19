@@ -8,12 +8,7 @@ variable "environment" {
   type        = string
 }
 
-variable "secret_name" {
-  description = "Name of the RDS database secret"
-  type        = string
-}
-
-variable "kms_key_arn" {
-  description = "KMS key ARN used to encrypt the secret"
+variable "rds_secret_arn" {
+  description = "ARN of the RDS-managed Secrets Manager secret"
   type        = string
 }
