@@ -1,9 +1,9 @@
-output "secret_arn" {
-  description = "ARN of the RDS secret"
-  value       = aws_secretsmanager_secret.rds.arn
+output "rds_secret_reader_role_arn" {
+  description = "IAM role ARN used by EKS workloads to read the RDS secret"
+  value       = aws_iam_role.rds_secret_reader.arn
 }
 
-output "secret_name" {
-  description = "Name of the RDS secret"
-  value       = aws_secretsmanager_secret.rds.name
+output "rds_secret_reader_role_name" {
+  description = "IAM role name used by EKS workloads to read the RDS secret"
+  value       = aws_iam_role.rds_secret_reader.name
 }
