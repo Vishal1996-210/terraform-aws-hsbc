@@ -1,0 +1,11 @@
+terraform fmt
+        ↓
+terraform init
+        ↓
+terraform validate
+        ↓
+terraform plan
+        ↓
+Review plan
+        ↓
+terraform apply
