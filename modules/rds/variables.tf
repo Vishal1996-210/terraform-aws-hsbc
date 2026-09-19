@@ -1,60 +1,60 @@
 variable "project_name" {
-  type = string
+  description = "Project name"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name"
+  type        = string
 }
 
-variable "private_db_subnet_ids" {
-  type = list(string)
+variable "db_subnet_ids" {
+  description = "Private DB subnet IDs"
+  type        = list(string)
 }
 
-variable "security_group_id" {
-  type = string
+variable "rds_security_group_id" {
+  description = "Security group ID for RDS"
+  type        = string
 }
 
-variable "engine" {
-  type    = string
-  default = "mysql"
+variable "kms_key_arn" {
+  description = "KMS key ARN used to encrypt RDS"
+  type        = string
 }
 
-variable "engine_version" {
-  type    = string
-  default = "8.0"
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
 }
 
-variable "instance_class" {
-  type    = string
-  default = "db.t3.micro"
+variable "db_username" {
+  description = "Master username for RDS"
+  type        = string
+}
+
+variable "db_instance_class" {
+  description = "RDS instance class"
+  type        = string
 }
 
 variable "allocated_storage" {
-  type    = number
-  default = 20
+  description = "Initial allocated storage in GB"
+  type        = number
 }
 
 variable "max_allocated_storage" {
-  type    = number
-  default = 50
+  description = "Maximum storage that RDS can automatically scale to"
+  type        = number
 }
 
-variable "multi_az" {
-  type    = bool
-  default = false
+variable "mysql_engine_version" {
+  description = "MySQL engine version"
+  type        = string
 }
 
 variable "backup_retention_period" {
-  type    = number
-  default = 7
-}
-
-variable "database_name" {
-  type    = string
-  default = "hsbcbank"
-}
-
-variable "master_username" {
-  type    = string
-  default = "admin"
+  description = "Number of days to retain automated backups"
+  type        = number
+  default     = 7
 }
