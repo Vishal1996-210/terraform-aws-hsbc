@@ -57,3 +57,8 @@ variable "app_port" {
   type        = number
   default     = 8080
 }
+
+variable "instance_profile_name" {
+  description = "IAM instance profile for application EC2 instances"
+  type        = string
+}
