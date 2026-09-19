@@ -2,10 +2,6 @@ aws_region   = "ap-south-1"
 environment  = "prod"
 project_name = "hsbc"
 
-aws_region   = "ap-south-1"
-environment  = "prod"
-project_name = "hsbc"
-
 vpc_cidr = "10.20.0.0/16"
 
 availability_zones = [
