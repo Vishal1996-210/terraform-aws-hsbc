@@ -104,3 +104,26 @@ module "secrets_manager" {
 
   rds_secret_arn = module.rds.master_user_secret_arn
 }
+
+resource "aws_eks_pod_identity_association" "aws_load_balancer_controller" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+
+  role_arn = module.load_balancer_controller.iam_role_arn
+
+  depends_on = [
+    module.eks
+  ]
+}
+
+module "load_balancer_controller" {
+  source = "../../modules/load-balancer-controller"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  cluster_name = module.eks.cluster_name
+  aws_region   = var.aws_region
+  vpc_id       = module.vpc.vpc_id
+}
