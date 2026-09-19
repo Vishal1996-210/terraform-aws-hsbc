@@ -22,3 +22,21 @@ Use depends_on → We manually tell Terraform the order.
 
 We use Git-based workflows for infrastructure changes. Terraform plan is generated during the CI process, 
 reviewed and approved through the change process, and Terraform apply is executed through the controlled deployment pipeline.
+
+When a developer raises a PR:
+
+Pull Request
+     ↓
+Checkout code
+     ↓
+Authenticate to AWS using OIDC
+     ↓
+terraform fmt -check
+     ↓
+terraform init
+     ↓
+terraform validate
+     ↓
+terraform plan
+     ↓
+Upload plan
