@@ -72,3 +72,33 @@ output "eks_application_node_group" {
   description = "Production EKS application node group"
   value       = module.eks.application_node_group_name
 }
+
+output "rds_instance_id" {
+  description = "Production RDS instance ID"
+  value       = module.rds.db_instance_id
+}
+
+output "rds_endpoint" {
+  description = "Production RDS endpoint"
+  value       = module.rds.db_endpoint
+}
+
+output "rds_port" {
+  description = "Production RDS MySQL port"
+  value       = module.rds.db_port
+}
+
+output "rds_database_name" {
+  description = "Production RDS database name"
+  value       = module.rds.db_name
+}
+
+output "rds_master_user_secret_arn" {
+  description = "Secrets Manager ARN containing the RDS master credentials"
+  value       = module.rds.master_user_secret_arn
+}
+
+output "rds_kms_key_arn" {
+  description = "KMS key ARN used for RDS encryption"
+  value       = module.kms.rds_kms_key_arn
+}
