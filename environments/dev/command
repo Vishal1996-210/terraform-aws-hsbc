@@ -9,3 +9,5 @@ terraform plan
 Review plan
         ↓
 terraform apply
+
+Terraform automatically creates resources in the required order based on dependencies. When one resource references another resource, Terraform understands the dependency automatically. If Terraform cannot identify the dependency, we can use depends_on to explicitly define it.
