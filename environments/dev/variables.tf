@@ -77,3 +77,8 @@ variable "rds_backup_retention_period" {
   description = "RDS automated backup retention period"
   type        = number
 }
+
+variable "domain_name" {
+  description = "Production application domain"
+  type        = string
+}
