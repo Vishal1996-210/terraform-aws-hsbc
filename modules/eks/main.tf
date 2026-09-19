@@ -157,3 +157,14 @@ resource "aws_eks_addon" "pod_identity_agent" {
   ]
 }
 
+resource "aws_eks_pod_identity_association" "rds_secret_reader" {
+  cluster_name    = aws_eks_cluster.this.name
+  namespace       = "customer"
+  service_account = "customer-service"
+
+  role_arn = var.rds_secret_reader_role_arn
+
+  depends_on = [
+    aws_eks_addon.pod_identity_agent
+  ]
+}
