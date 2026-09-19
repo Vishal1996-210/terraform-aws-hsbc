@@ -1,9 +1,19 @@
-output "ec2_role_name" {
-  description = "EC2 IAM role name"
-  value       = aws_iam_role.ec2.name
+output "eks_cluster_role_arn" {
+  description = "ARN of the EKS cluster IAM role"
+  value       = aws_iam_role.eks_cluster.arn
 }
 
-output "ec2_instance_profile_name" {
-  description = "EC2 instance profile name"
-  value       = aws_iam_instance_profile.ec2.name
+output "eks_cluster_role_name" {
+  description = "Name of the EKS cluster IAM role"
+  value       = aws_iam_role.eks_cluster.name
+}
+
+output "eks_node_role_arn" {
+  description = "ARN of the EKS node IAM role"
+  value       = aws_iam_role.eks_node.arn
+}
+
+output "eks_node_role_name" {
+  description = "Name of the EKS node IAM role"
+  value       = aws_iam_role.eks_node.name
 }
