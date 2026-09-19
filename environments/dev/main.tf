@@ -13,3 +13,13 @@ module "vpc" {
 
   private_db_subnet_cidrs = var.private_db_subnet_cidrs
 }
+
+module "security_groups" {
+  source = "../../modules/security-groups"
+
+  project_name = var.project_name
+  environment  = var.environment
+  vpc_id       = module.vpc.vpc_id
+
+  app_port = 8080
+}
