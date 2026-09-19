@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb" {
   name        = "${var.project_name}-${var.environment}-alb-sg"
-  description = "Security group for Application Load Balancer"
+  description = "Security group for production Application Load Balancer"
   vpc_id      = var.vpc_id
 
   tags = {
@@ -11,93 +11,81 @@ resource "aws_security_group" "alb" {
 resource "aws_vpc_security_group_ingress_rule" "alb_https" {
   security_group_id = aws_security_group.alb.id
 
-  description = "Allow HTTPS from internet"
-
-  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = 443
   to_port     = 443
+  ip_protocol = "tcp"
 
-  cidr_ipv4 = "0.0.0.0/0"
+  description = "Allow HTTPS traffic from the internet"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "alb_http" {
+resource "aws_vpc_security_group_egress_rule" "alb_all_outbound" {
   security_group_id = aws_security_group.alb.id
 
-  description = "Allow HTTP from internet for Dev"
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
 
-  ip_protocol = "tcp"
-  from_port   = 80
-  to_port     = 80
-
-  cidr_ipv4 = "0.0.0.0/0"
+  description = "Allow outbound traffic from ALB"
 }
 
-resource "aws_vpc_security_group_egress_rule" "alb_to_app" {
-  security_group_id = aws_security_group.alb.id
-
-  description = "Allow ALB to communicate with application tier"
-
-  ip_protocol = "tcp"
-  from_port   = 8080
-  to_port     = 8080
-
-  referenced_security_group_id = aws_security_group.app.id
-}
-
-resource "aws_security_group" "app" {
-  name        = "${var.project_name}-${var.environment}-app-sg"
-  description = "Security group for application servers"
+resource "aws_security_group" "eks_application" {
+  name        = "${var.project_name}-${var.environment}-eks-app-sg"
+  description = "Security group for EKS application workloads"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-app-sg"
+    Name = "${var.project_name}-${var.environment}-eks-app-sg"
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "app_from_alb" {
-  security_group_id = aws_security_group.app.id
-
-  description = "Allow application traffic from ALB"
-
-  ip_protocol = "tcp"
-  from_port   = 8080
-  to_port     = 8080
+resource "aws_vpc_security_group_ingress_rule" "eks_from_alb" {
+  security_group_id = aws_security_group.eks_application.id
 
   referenced_security_group_id = aws_security_group.alb.id
+
+  from_port   = var.app_port
+  to_port     = var.app_port
+  ip_protocol = "tcp"
+
+  description = "Allow application traffic from ALB"
 }
 
-resource "aws_security_group" "db" {
-  name        = "${var.project_name}-${var.environment}-db-sg"
-  description = "Security group for database"
+resource "aws_vpc_security_group_egress_rule" "eks_all_outbound" {
+  security_group_id = aws_security_group.eks_application.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+
+  description = "Allow outbound traffic from EKS workloads"
+}
+
+resource "aws_security_group" "rds" {
+  name        = "${var.project_name}-${var.environment}-rds-sg"
+  description = "Security group for production RDS MySQL"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "${var.project_name}-${var.environment}-db-sg"
+    Name = "${var.project_name}-${var.environment}-rds-sg"
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "db_from_app" {
-  security_group_id = aws_security_group.db.id
+resource "aws_vpc_security_group_ingress_rule" "rds_from_eks" {
+  security_group_id = aws_security_group.rds.id
 
-  description = "Allow MySQL from application tier"
+  referenced_security_group_id = aws_security_group.eks_application.id
 
-  ip_protocol = "tcp"
   from_port   = 3306
   to_port     = 3306
+  ip_protocol = "tcp"
 
-  referenced_security_group_id = aws_security_group.app.id
+  description = "Allow MySQL traffic from EKS applications"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "app_ssh" {
-  count = var.allowed_ssh_cidr != null ? 1 : 0
+resource "aws_vpc_security_group_egress_rule" "rds_all_outbound" {
+  security_group_id = aws_security_group.rds.id
 
-  security_group_id = aws_security_group.app.id
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
 
-  description = "Allow SSH from approved administration network"
-
-  ip_protocol = "tcp"
-  from_port   = 22
-  to_port     = 22
-
-  cidr_ipv4 = var.allowed_ssh_cidr
+  description = "Allow outbound traffic from RDS"
 }
