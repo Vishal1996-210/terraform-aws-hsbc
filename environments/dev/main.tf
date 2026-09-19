@@ -51,3 +51,26 @@ module "alb" {
   target_port       = 8080
   health_check_path = "/actuator/health"
 }
+
+module "autoscaling" {
+  source = "../../modules/autoscaling"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  vpc_id = module.vpc.vpc_id
+
+  private_app_subnet_ids = module.vpc.private_app_subnet_ids
+
+  security_group_id = module.security_groups.app_security_group_id
+
+  target_group_arn = module.alb.target_group_arn
+
+  instance_type = "t3.micro"
+
+  min_size         = 2
+  desired_capacity = 2
+  max_size         = 4
+
+  app_port = 8080
+}
