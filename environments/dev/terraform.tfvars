@@ -1,3 +1,3 @@
-aws_region  = "ap-south-1"
-environment = "dev"
+aws_region   = "ap-south-1"
+environment  = "prod"
 project_name = "hsbc"
