@@ -111,3 +111,46 @@ resource "aws_vpc_security_group_ingress_rule" "eks_cluster_from_nodes" {
 
   description = "Allow EKS nodes to communicate with Kubernetes API"
 }
+
+resource "aws_security_group" "eks_node" {
+  name        = "${var.project_name}-${var.environment}-eks-node-sg"
+  description = "Security group for EKS worker nodes"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-eks-node-sg"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "eks_node_from_alb" {
+  security_group_id = aws_security_group.eks_node.id
+
+  referenced_security_group_id = aws_security_group.alb.id
+
+  from_port   = var.app_port
+  to_port     = var.app_port
+  ip_protocol = "tcp"
+
+  description = "Allow application traffic from ALB"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "eks_cluster_from_nodes" {
+  security_group_id = aws_security_group.eks_cluster.id
+
+  referenced_security_group_id = aws_security_group.eks_node.id
+
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+
+  description = "Allow Kubernetes API traffic from EKS nodes"
+}
+
+resource "aws_vpc_security_group_egress_rule" "eks_node_all_outbound" {
+  security_group_id = aws_security_group.eks_node.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+
+  description = "Allow outbound traffic from EKS nodes"
+}
