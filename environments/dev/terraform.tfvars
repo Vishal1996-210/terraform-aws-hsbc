@@ -33,3 +33,17 @@ private_db_subnet_cidrs = [
 ]
 
 eks_cluster_version = "1.35"
+
+rds_db_name = "hsbc"
+
+rds_db_username = "hsbcadmin"
+
+rds_instance_class = "db.m6i.large"
+
+rds_allocated_storage = 100
+
+rds_max_allocated_storage = 500
+
+mysql_engine_version = "8.0"
+
+rds_backup_retention_period = 7
