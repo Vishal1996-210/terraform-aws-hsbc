@@ -93,3 +93,12 @@ module "rds" {
 
   backup_retention_period = var.rds_backup_retention_period
 }
+
+module "secrets_manager" {
+  source = "../../modules/secrets-manager"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  rds_secret_arn = module.rds.master_user_secret_arn
+}
