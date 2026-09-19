@@ -14,7 +14,7 @@ variable "cluster_version" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID"
+  description = "VPC ID where EKS will be deployed"
   type        = string
 }
 
@@ -41,11 +41,17 @@ variable "cluster_security_group_id" {
 variable "system_node_instance_types" {
   description = "Instance types for system node group"
   type        = list(string)
-  default     = ["m6i.large"]
+
+  default = [
+    "m6i.large"
+  ]
 }
 
 variable "application_node_instance_types" {
   description = "Instance types for application node group"
   type        = list(string)
-  default     = ["m6i.large"]
+
+  default = [
+    "m6i.large"
+  ]
 }
