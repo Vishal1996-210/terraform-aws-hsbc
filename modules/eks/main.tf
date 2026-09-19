@@ -168,3 +168,17 @@ resource "aws_eks_pod_identity_association" "rds_secret_reader" {
     aws_eks_addon.pod_identity_agent
   ]
 }
+
+resource "aws_eks_addon" "secrets_store_csi_driver_provider" {
+  cluster_name = aws_eks_cluster.this.name
+
+  addon_name = "aws-secrets-store-csi-driver-provider"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+
+  depends_on = [
+    aws_eks_cluster.this,
+    aws_eks_addon.pod_identity_agent
+  ]
+}
