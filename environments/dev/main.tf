@@ -61,3 +61,35 @@ module "eks" {
 
   cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
 }
+
+module "kms" {
+  source = "../../modules/kms"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+module "rds" {
+  source = "../../modules/rds"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  db_subnet_ids = module.vpc.private_db_subnet_ids
+
+  rds_security_group_id = module.security_groups.rds_security_group_id
+
+  kms_key_arn = module.kms.rds_kms_key_arn
+
+  db_name     = var.rds_db_name
+  db_username = var.rds_db_username
+
+  db_instance_class = var.rds_instance_class
+
+  allocated_storage     = var.rds_allocated_storage
+  max_allocated_storage = var.rds_max_allocated_storage
+
+  mysql_engine_version = var.mysql_engine_version
+
+  backup_retention_period = var.rds_backup_retention_period
+}
