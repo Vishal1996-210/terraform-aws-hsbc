@@ -60,7 +60,7 @@ module "eks" {
   eks_node_role_arn    = module.iam.eks_node_role_arn
 
   cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
-
+  node_security_group_id    = module.security_groups.eks_node_security_group_id
 }
 
 module "kms" {
