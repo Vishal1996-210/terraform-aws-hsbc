@@ -15,7 +15,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project     = "HSBC"
-      Environment = "dev"
+      Environment = "prod"
       ManagedBy   = "Terraform"
     }
   }
