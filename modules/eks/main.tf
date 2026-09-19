@@ -9,7 +9,8 @@ resource "aws_eks_cluster" "this" {
   }
 
   vpc_config {
-    subnet_ids              = var.private_eks_subnet_ids
+    subnet_ids = var.private_eks_subnet_ids
+
     endpoint_private_access = true
     endpoint_public_access  = false
 
@@ -29,4 +30,107 @@ resource "aws_eks_cluster" "this" {
   tags = {
     Name = "${var.project_name}-${var.environment}-eks"
   }
+}
+
+resource "aws_eks_node_group" "system" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = "${var.project_name}-${var.environment}-system"
+  node_role_arn   = var.eks_node_role_arn
+
+  subnet_ids = var.private_eks_subnet_ids
+
+  instance_types = var.system_node_instance_types
+  capacity_type  = "ON_DEMAND"
+
+  scaling_config {
+    desired_size = 3
+    min_size     = 3
+    max_size     = 6
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  labels = {
+    workload = "system"
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-system-node-group"
+  }
+
+  depends_on = [
+    aws_eks_cluster.this
+  ]
+}
+
+resource "aws_eks_node_group" "application" {
+  cluster_name    = aws_eks_cluster.this.name
+  node_group_name = "${var.project_name}-${var.environment}-application"
+  node_role_arn   = var.eks_node_role_arn
+
+  subnet_ids = var.private_eks_subnet_ids
+
+  instance_types = var.application_node_instance_types
+  capacity_type  = "ON_DEMAND"
+
+  scaling_config {
+    desired_size = 3
+    min_size     = 3
+    max_size     = 10
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  labels = {
+    workload = "application"
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-application-node-group"
+  }
+
+  depends_on = [
+    aws_eks_cluster.this
+  ]
+}
+
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name = aws_eks_cluster.this.name
+  addon_name   = "vpc-cni"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+
+  depends_on = [
+    aws_eks_cluster.this
+  ]
+}
+
+resource "aws_eks_addon" "coredns" {
+  cluster_name = aws_eks_cluster.this.name
+  addon_name   = "coredns"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+
+  depends_on = [
+    aws_eks_cluster.this,
+    aws_eks_node_group.system
+  ]
+}
+
+resource "aws_eks_addon" "kube_proxy" {
+  cluster_name = aws_eks_cluster.this.name
+  addon_name   = "kube-proxy"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+
+  depends_on = [
+    aws_eks_cluster.this
+  ]
 }
