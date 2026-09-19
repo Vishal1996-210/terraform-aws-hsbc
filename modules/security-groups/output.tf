@@ -1,14 +1,14 @@
 output "alb_security_group_id" {
-  description = "ALB security group ID"
+  description = "Security group ID for the ALB"
   value       = aws_security_group.alb.id
 }
 
-output "app_security_group_id" {
-  description = "Application security group ID"
-  value       = aws_security_group.app.id
+output "eks_application_security_group_id" {
+  description = "Security group ID for EKS application workloads"
+  value       = aws_security_group.eks_application.id
 }
 
-output "db_security_group_id" {
-  description = "Database security group ID"
-  value       = aws_security_group.db.id
+output "rds_security_group_id" {
+  description = "Security group ID for RDS"
+  value       = aws_security_group.rds.id
 }
