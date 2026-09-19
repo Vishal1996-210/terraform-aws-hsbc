@@ -60,6 +60,8 @@ module "eks" {
   eks_node_role_arn    = module.iam.eks_node_role_arn
 
   cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
+
+  rds_secret_reader_role_arn = module.secrets_manager.rds_secret_reader_role_arn
 }
 
 module "kms" {
