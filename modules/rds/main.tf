@@ -64,7 +64,6 @@ resource "aws_db_instance" "mysql" {
 
   enabled_cloudwatch_logs_exports = [
     "error",
-    "general",
     "slowquery"
   ]
 
