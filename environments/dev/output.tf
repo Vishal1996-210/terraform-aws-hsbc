@@ -32,3 +32,13 @@ output "rds_security_group_id" {
   description = "Production RDS security group ID"
   value       = module.security_groups.rds_security_group_id
 }
+
+output "eks_cluster_role_arn" {
+  description = "EKS cluster IAM role ARN"
+  value       = module.iam.eks_cluster_role_arn
+}
+
+output "eks_node_role_arn" {
+  description = "EKS node IAM role ARN"
+  value       = module.iam.eks_node_role_arn
+}
