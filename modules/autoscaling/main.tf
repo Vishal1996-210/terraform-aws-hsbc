@@ -18,6 +18,9 @@ resource "aws_launch_template" "app" {
   name = "${var.project_name}-${var.environment}-app-lt"
 
   image_id = data.aws_ami.amazon_linux.id
+  iam_instance_profile {
+    name = var.instance_profile_name
+  }
 
   instance_type = var.instance_type
 
