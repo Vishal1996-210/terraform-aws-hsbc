@@ -1,27 +1,34 @@
 variable "project_name" {
-  type = string
+  description = "Project name"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name"
+  type        = string
 }
 
 variable "vpc_cidr" {
-  type = string
+  description = "CIDR block for the VPC"
+  type        = string
 }
 
 variable "availability_zones" {
-  type = list(string)
+  description = "Availability Zones for the VPC"
+  type        = list(string)
 }
 
 variable "public_subnet_cidrs" {
-  type = list(string)
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
 }
 
-variable "private_app_subnet_cidrs" {
-  type = list(string)
+variable "private_eks_subnet_cidrs" {
+  description = "CIDR blocks for private EKS subnets"
+  type        = list(string)
 }
 
 variable "private_db_subnet_cidrs" {
-  type = list(string)
+  description = "CIDR blocks for private DB subnets"
+  type        = list(string)
 }
