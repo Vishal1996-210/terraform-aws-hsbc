@@ -127,3 +127,11 @@ module "load_balancer_controller" {
   aws_region   = var.aws_region
   vpc_id       = module.vpc.vpc_id
 }
+
+module "route53" {
+  source = "../../modules/route53"
+
+  project_name = var.project_name
+  environment  = var.environment
+  domain_name  = var.domain_name
+}
