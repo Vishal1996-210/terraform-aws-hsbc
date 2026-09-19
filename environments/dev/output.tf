@@ -13,3 +13,8 @@ output "private_app_subnet_ids" {
 output "private_db_subnet_ids" {
   value = module.vpc.private_db_subnet_ids
 }
+
+output "alb_dns_name" {
+  description = "Dev ALB DNS name"
+  value       = module.alb.alb_dns_name
+}
