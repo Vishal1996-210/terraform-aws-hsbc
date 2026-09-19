@@ -40,3 +40,8 @@ terraform validate
 terraform plan
      ↓
 Upload plan
+
+
+"We manage AWS infrastructure using Terraform through GitHub Actions. When a developer raises a PR, the pipeline runs Terraform formatting, initialization, validation and plan. 
+After the PR is reviewed and merged into the main branch, a production pipeline generates a fresh Terraform plan and waits for production approval. 
+Once approved, Terraform apply is executed using GitHub OIDC to authenticate securely with AWS."
