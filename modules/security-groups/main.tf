@@ -109,5 +109,5 @@ resource "aws_vpc_security_group_ingress_rule" "eks_cluster_from_nodes" {
   to_port     = 443
   ip_protocol = "tcp"
 
-  description = "Allow EKS nodes to communicate with the Kubernetes API"
+  description = "Allow EKS nodes to communicate with Kubernetes API"
 }
