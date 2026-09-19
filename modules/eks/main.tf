@@ -63,6 +63,11 @@ resource "aws_eks_node_group" "system" {
   depends_on = [
     aws_eks_cluster.this
   ]
+  network_interfaces {
+    security_groups = [
+      var.node_security_group_id
+    ]
+  }
 }
 
 resource "aws_eks_node_group" "application" {
@@ -96,6 +101,11 @@ resource "aws_eks_node_group" "application" {
   depends_on = [
     aws_eks_cluster.this
   ]
+  network_interfaces {
+    security_groups = [
+      var.node_security_group_id
+    ]
+  }
 }
 
 resource "aws_eks_addon" "vpc_cni" {
@@ -146,3 +156,4 @@ resource "aws_eks_addon" "pod_identity_agent" {
     aws_eks_cluster.this
   ]
 }
+
