@@ -1,23 +1,29 @@
 output "db_instance_id" {
-  value = aws_db_instance.this.id
+  description = "RDS instance identifier"
+  value       = aws_db_instance.mysql.id
 }
 
-output "db_instance_identifier" {
-  value = aws_db_instance.this.identifier
+output "db_instance_arn" {
+  description = "RDS instance ARN"
+  value       = aws_db_instance.mysql.arn
 }
 
 output "db_endpoint" {
-  value = aws_db_instance.this.address
+  description = "RDS MySQL endpoint"
+  value       = aws_db_instance.mysql.address
 }
 
 output "db_port" {
-  value = aws_db_instance.this.port
+  description = "RDS MySQL port"
+  value       = aws_db_instance.mysql.port
 }
 
-output "db_subnet_group_name" {
-  value = aws_db_subnet_group.this.name
+output "db_name" {
+  description = "Initial database name"
+  value       = aws_db_instance.mysql.db_name
 }
 
 output "master_user_secret_arn" {
-  value = aws_db_instance.this.master_user_secret[0].secret_arn
+  description = "ARN of the Secrets Manager secret containing the RDS master credentials"
+  value       = aws_db_instance.mysql.master_user_secret[0].secret_arn
 }
