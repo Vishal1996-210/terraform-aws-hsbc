@@ -61,7 +61,6 @@ module "eks" {
 
   cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
 
-  rds_secret_reader_role_arn = module.secrets_manager.rds_secret_reader_role_arn
 }
 
 module "kms" {
