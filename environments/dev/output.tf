@@ -28,3 +28,19 @@ output "launch_template_id" {
   description = "Application Launch Template"
   value       = module.autoscaling.launch_template_id
 }
+
+output "rds_endpoint" {
+  value = module.rds.db_endpoint
+}
+
+output "rds_port" {
+  value = module.rds.db_port
+}
+
+output "rds_instance_id" {
+  value = module.rds.db_instance_id
+}
+
+output "rds_secret_arn" {
+  value = module.rds.master_user_secret_arn
+}
