@@ -31,3 +31,5 @@ private_db_subnet_cidrs = [
   "10.20.22.0/24",
   "10.20.23.0/24"
 ]
+
+eks_cluster_version = "1.35"
