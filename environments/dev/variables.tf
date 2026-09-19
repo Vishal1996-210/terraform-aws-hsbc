@@ -42,3 +42,38 @@ variable "eks_cluster_version" {
   description = "Kubernetes version for production EKS"
   type        = string
 }
+
+variable "rds_db_name" {
+  description = "Initial MySQL database name"
+  type        = string
+}
+
+variable "rds_db_username" {
+  description = "RDS master username"
+  type        = string
+}
+
+variable "rds_instance_class" {
+  description = "RDS MySQL instance class"
+  type        = string
+}
+
+variable "rds_allocated_storage" {
+  description = "Initial RDS storage in GB"
+  type        = number
+}
+
+variable "rds_max_allocated_storage" {
+  description = "Maximum RDS storage in GB"
+  type        = number
+}
+
+variable "mysql_engine_version" {
+  description = "MySQL engine version"
+  type        = string
+}
+
+variable "rds_backup_retention_period" {
+  description = "RDS automated backup retention period"
+  type        = number
+}
