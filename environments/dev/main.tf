@@ -100,8 +100,6 @@ module "secrets_manager" {
 
   project_name = var.project_name
   environment  = var.environment
-
-  rds_secret_arn = module.rds.master_user_secret_arn
 }
 
 resource "aws_eks_pod_identity_association" "aws_load_balancer_controller" {
