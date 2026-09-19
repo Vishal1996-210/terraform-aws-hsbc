@@ -55,3 +55,8 @@ variable "application_node_instance_types" {
     "m6i.large"
   ]
 }
+
+variable "node_security_group_id" {
+  description = "Security group ID for EKS worker nodes"
+  type        = string
+}
