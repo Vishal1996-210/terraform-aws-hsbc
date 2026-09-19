@@ -30,3 +30,16 @@ module "iam" {
   project_name = var.project_name
   environment  = var.environment
 }
+
+module "ecr" {
+  source = "../../modules/ecr"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  repository_names = [
+    "hsbc-prod-customer-service",
+    "hsbc-prod-account-service",
+    "hsbc-prod-card-service"
+  ]
+}
