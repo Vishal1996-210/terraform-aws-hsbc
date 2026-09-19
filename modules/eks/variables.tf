@@ -56,11 +56,6 @@ variable "application_node_instance_types" {
   ]
 }
 
-variable "rds_secret_reader_role_arn" {
-  description = "IAM role ARN used by workloads to read RDS credentials"
-  type        = string
-}
-
 variable "node_security_group_id" {
   description = "Security group ID for EKS worker nodes"
   type        = string
