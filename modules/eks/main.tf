@@ -32,15 +32,102 @@ resource "aws_eks_cluster" "this" {
   }
 }
 
+
+# ---------------------------------------------------------
+# Launch template for system nodes
+# ---------------------------------------------------------
+
+resource "aws_launch_template" "system" {
+  name = "${var.project_name}-${var.environment}-system-node-template"
+
+  instance_type = var.system_node_instance_types[0]
+
+  vpc_security_group_ids = [
+    var.node_security_group_id
+  ]
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${var.project_name}-${var.environment}-system-node"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = {
+      Name = "${var.project_name}-${var.environment}-system-node-volume"
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+# ---------------------------------------------------------
+# Launch template for application nodes
+# ---------------------------------------------------------
+
+resource "aws_launch_template" "application" {
+  name = "${var.project_name}-${var.environment}-application-node-template"
+
+  instance_type = var.application_node_instance_types[0]
+
+  vpc_security_group_ids = [
+    var.node_security_group_id
+  ]
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${var.project_name}-${var.environment}-application-node"
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = {
+      Name = "${var.project_name}-${var.environment}-application-node-volume"
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+# ---------------------------------------------------------
+# System node group
+# ---------------------------------------------------------
+
 resource "aws_eks_node_group" "system" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "${var.project_name}-${var.environment}-system"
-  node_role_arn   = var.eks_node_role_arn
+
+  node_role_arn = var.eks_node_role_arn
 
   subnet_ids = var.private_eks_subnet_ids
 
-  instance_types = var.system_node_instance_types
-  capacity_type  = "ON_DEMAND"
+  capacity_type = "ON_DEMAND"
 
   scaling_config {
     desired_size = 3
@@ -52,6 +139,11 @@ resource "aws_eks_node_group" "system" {
     max_unavailable = 1
   }
 
+  launch_template {
+    id      = aws_launch_template.system.id
+    version = aws_launch_template.system.latest_version
+  }
+
   labels = {
     workload = "system"
   }
@@ -61,19 +153,25 @@ resource "aws_eks_node_group" "system" {
   }
 
   depends_on = [
-    aws_eks_cluster.this
+    aws_eks_cluster.this,
+    aws_launch_template.system
   ]
 }
+
+
+# ---------------------------------------------------------
+# Application node group
+# ---------------------------------------------------------
 
 resource "aws_eks_node_group" "application" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "${var.project_name}-${var.environment}-application"
-  node_role_arn   = var.eks_node_role_arn
+
+  node_role_arn = var.eks_node_role_arn
 
   subnet_ids = var.private_eks_subnet_ids
 
-  instance_types = var.application_node_instance_types
-  capacity_type  = "ON_DEMAND"
+  capacity_type = "ON_DEMAND"
 
   scaling_config {
     desired_size = 3
@@ -85,6 +183,11 @@ resource "aws_eks_node_group" "application" {
     max_unavailable = 1
   }
 
+  launch_template {
+    id      = aws_launch_template.application.id
+    version = aws_launch_template.application.latest_version
+  }
+
   labels = {
     workload = "application"
   }
@@ -94,9 +197,15 @@ resource "aws_eks_node_group" "application" {
   }
 
   depends_on = [
-    aws_eks_cluster.this
+    aws_eks_cluster.this,
+    aws_launch_template.application
   ]
 }
+
+
+# ---------------------------------------------------------
+# EKS VPC CNI
+# ---------------------------------------------------------
 
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name = aws_eks_cluster.this.name
@@ -109,6 +218,11 @@ resource "aws_eks_addon" "vpc_cni" {
     aws_eks_cluster.this
   ]
 }
+
+
+# ---------------------------------------------------------
+# CoreDNS
+# ---------------------------------------------------------
 
 resource "aws_eks_addon" "coredns" {
   cluster_name = aws_eks_cluster.this.name
@@ -123,6 +237,11 @@ resource "aws_eks_addon" "coredns" {
   ]
 }
 
+
+# ---------------------------------------------------------
+# kube-proxy
+# ---------------------------------------------------------
+
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name = aws_eks_cluster.this.name
   addon_name   = "kube-proxy"
@@ -135,6 +254,11 @@ resource "aws_eks_addon" "kube_proxy" {
   ]
 }
 
+
+# ---------------------------------------------------------
+# EKS Pod Identity Agent
+# ---------------------------------------------------------
+
 resource "aws_eks_addon" "pod_identity_agent" {
   cluster_name = aws_eks_cluster.this.name
   addon_name   = "eks-pod-identity-agent"
@@ -146,6 +270,11 @@ resource "aws_eks_addon" "pod_identity_agent" {
     aws_eks_cluster.this
   ]
 }
+
+
+# ---------------------------------------------------------
+# AWS Secrets Store CSI Driver Provider
+# ---------------------------------------------------------
 
 resource "aws_eks_addon" "secrets_store_csi_driver_provider" {
   cluster_name = aws_eks_cluster.this.name
