@@ -102,3 +102,8 @@ output "rds_kms_key_arn" {
   description = "KMS key ARN used for RDS encryption"
   value       = module.kms.rds_kms_key_arn
 }
+
+output "rds_secret_reader_role_arn" {
+  description = "IAM role ARN for EKS workloads to read RDS credentials"
+  value       = module.secrets_manager.rds_secret_reader_role_arn
+}
