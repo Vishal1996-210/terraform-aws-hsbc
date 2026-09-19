@@ -9,12 +9,12 @@ variable "environment" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID"
+  description = "ID of the VPC"
   type        = string
 }
 
-variable "allowed_ssh_cidr" {
-  description = "CIDR allowed for SSH access to application servers"
-  type        = string
-  default     = null
+variable "app_port" {
+  description = "Application port used by Java microservices"
+  type        = number
+  default     = 8080
 }
