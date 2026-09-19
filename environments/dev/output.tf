@@ -42,3 +42,8 @@ output "eks_node_role_arn" {
   description = "EKS node IAM role ARN"
   value       = module.iam.eks_node_role_arn
 }
+
+output "ecr_repository_urls" {
+  description = "Production ECR repository URLs"
+  value       = module.ecr.repository_urls
+}
